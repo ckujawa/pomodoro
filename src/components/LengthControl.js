@@ -8,7 +8,6 @@ import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 const Control = styled.div`
   margin: 0 20px;
   padding: 10px;
-  width: 20%;
   border: 3px solid var(--dark);
   border-radius: 7px;
   display: flex;

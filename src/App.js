@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import LengthControl from "./components/LengthControl";
 import GlobalStyle from "./Global";
+import Clock from "./components/Clock";
 
 const AppWrapper = styled.div`
   background-color: var(--main);
@@ -16,6 +17,26 @@ const AppWrapper = styled.div`
   font-family: Righteous, cursive;
   font-size: 2em;
   line-height: 1.8em;
+`;
+
+const AppContainer = styled.div`
+  height: 50%;
+  width: 60%;
+  border: 2px solid var(--light);
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 3em 1fr 3fr;
+  justify-items: center;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  grid-column: 1/3;
+  margin: 0;
+  padding: 0;
+  line-height: 2em;
+
 `;
 
 class App extends React.Component {
@@ -56,18 +77,22 @@ class App extends React.Component {
     return (
       <AppWrapper>
         <GlobalStyle />
-        <LengthControl
-          compName="session"
-          title="Session Time"
-          length={this.state.sessionLength}
-          clickFunc={this.changeControlValue}
-        />
-        <LengthControl
-          compName="break"
-          title="Break Time"
-          length={this.state.breakLength}
-          clickFunc={this.changeControlValue}
-        />
+        <AppContainer>
+          <Title>React Pomodoro Clock</Title>
+          <LengthControl
+            compName="session"
+            title="Session Time"
+            length={this.state.sessionLength}
+            clickFunc={this.changeControlValue}
+          />
+          <LengthControl
+            compName="break"
+            title="Break Time"
+            length={this.state.breakLength}
+            clickFunc={this.changeControlValue}
+          />
+        <Clock Columns = "1/3" />
+        </AppContainer>
       </AppWrapper>
     );
   }
