@@ -23,6 +23,12 @@ const ControlWrapper = styled.div`
   margin: 0;
   padding: 0;
 
+
+
+  > div{
+    font-size: 2.3em;
+    padding: 0 10px;
+  }
 `;
 
 const Button = styled.button`
@@ -39,10 +45,6 @@ const Button = styled.button`
   &:hover{
     transform: scale(1.1);
     box-shadow: 4px 4px 7px black;
-  }
-
-  & > div{
-    font-size: 5em;
   }
 `;
 
