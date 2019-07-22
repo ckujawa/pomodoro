@@ -15,7 +15,7 @@ const AppWrapper = styled.div`
   align-items: center;
   justify-content: center;
   font-family: Righteous, cursive;
-  font-size: 2em;
+  font-size: 1.5em;
   line-height: 1.8em;
 `;
 
@@ -35,14 +35,18 @@ const Title = styled.h1`
   grid-column: 1/3;
   margin: 0;
   padding: 0;
-  line-height: 2em;
+  line-height: 1.5em;
 
 `;
 
 class App extends React.Component {
   state = {
     breakLength: 5,
-    sessionLength: 25
+    sessionLength: 25,
+    minutesLeft: 25,
+    secondsLeft: 0,
+    currentTimer: 'Session', //session or break
+    clockInterval: null,
   };
 
   changeControlValue = (compName, value) => {
@@ -73,6 +77,30 @@ class App extends React.Component {
     }
   };
 
+  updateClock = () => {
+    let minutesLeft = this.state.minutesLeft;
+    let secondsLeft = this.state.secondsLeft;
+
+    if (secondsLeft === 0) {
+      secondsLeft = 59;
+      minutesLeft -= 1;
+    } else {
+      secondsLeft -= 1;
+    }
+
+    this.setState({ minutesLeft: minutesLeft, secondsLeft: secondsLeft });
+  }
+
+  startStop = () => {
+    if (this.state.clockInterval === null) {
+      const interval = setInterval(this.updateClock, 1000);
+      this.setState({ clockInterval: interval });
+    } else {
+      clearInterval(this.state.clockInterval);
+      this.setState({ clockInterval: null, });
+    }
+  };
+
   render() {
     return (
       <AppWrapper>
@@ -91,7 +119,13 @@ class App extends React.Component {
             length={this.state.breakLength}
             clickFunc={this.changeControlValue}
           />
-        <Clock Columns = "1/3" />
+          <Clock 
+            Columns="1/3" 
+            minutesLeft={this.state.minutesLeft} 
+            secondsLeft={this.state.secondsLeft} 
+            timer={this.state.currentTimer} 
+            startStopFunc={this.startStop}
+            />
         </AppContainer>
       </AppWrapper>
     );
