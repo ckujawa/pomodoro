@@ -9,6 +9,14 @@ const GlobalStyle = createGlobalStyle`
         --secondary-dark: #015059;
         --secondary-light: #028C7E;
     }
+
+    body{
+        width: 100vw;
+        height: 100vh;
+        padding: .2rem;
+        margin: 0;
+        background-color: var(--main);
+    }
 `;
 
 export default GlobalStyle;

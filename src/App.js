@@ -7,7 +7,6 @@ import Clock from "./components/Clock";
 import bell from "./assets/audio/bell.mp3";
 
 const AppWrapper = styled.div`
-  background-color: var(--main);
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -18,10 +17,14 @@ const AppWrapper = styled.div`
   font-family: Righteous, cursive;
   font-size: 1.5em;
   line-height: 1.8em;
+
+  @media (max-width: 900px) {
+    font-size: 1em;
+    linge-height: 1.2em;
+  }
 `;
 
 const AppContainer = styled.div`
-  height: 50%;
   width: 60%;
   border: 2px solid var(--light);
   border-radius: 5px;
@@ -30,6 +33,11 @@ const AppContainer = styled.div`
   grid-template-rows: 3em 1fr 3fr;
   justify-items: center;
   align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
 `;
 
 const Title = styled.h1`
@@ -37,6 +45,10 @@ const Title = styled.h1`
   margin: 0;
   padding: 0;
   line-height: 1.5em;
+
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
 
 class App extends React.Component {

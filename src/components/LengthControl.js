@@ -2,7 +2,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 import { Button } from "./Button";
@@ -15,6 +15,11 @@ const Control = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 900px) {
+    grid-column: 1/1;
+    border: 10px;
+  }
 `;
 
 const ControlWrapper = styled.div`
@@ -24,7 +29,7 @@ const ControlWrapper = styled.div`
   margin: 0;
   padding: 0;
 
-  > div{
+  > div {
     font-size: 2.3em;
     padding: 0 10px;
   }
@@ -60,6 +65,6 @@ LengthControl.propTypes = {
   title: PropTypes.string.isRequired,
   clickFunc: PropTypes.func.isRequired,
   length: PropTypes.number.isRequired
-}
+};
 
 export default LengthControl;

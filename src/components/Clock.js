@@ -16,6 +16,10 @@ const ClockDiv = styled.div`
   justify-content: space-around;
   font-size: 2em;
   ${props => props.Columns && `grid-column: ${props.Columns}`}
+
+  @media (max-width: 900px) {
+    grid-column: 1/1;
+  }
 `;
 
 const ClockFace = styled.div`
