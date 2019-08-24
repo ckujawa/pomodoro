@@ -4,6 +4,7 @@ import styled from "styled-components";
 import LengthControl from "./components/LengthControl";
 import GlobalStyle from "./Global";
 import Clock from "./components/Clock";
+import bell from "./assets/audio/bell.mp3";
 
 const AppWrapper = styled.div`
   background-color: var(--main);
@@ -36,7 +37,6 @@ const Title = styled.h1`
   margin: 0;
   padding: 0;
   line-height: 1.5em;
-
 `;
 
 class App extends React.Component {
@@ -45,17 +45,20 @@ class App extends React.Component {
     sessionLength: 25,
     minutesLeft: 25,
     secondsLeft: 0,
-    currentTimer: 'Session', //session or break
-    clockInterval: null,
+    currentTimer: "Session", //session or break
+    clockInterval: null
   };
 
   changeControlValue = (compName, value) => {
     let valueToChange = 0;
+    let oldValue = 0;
 
     if (compName === "session") {
       valueToChange = this.state.sessionLength;
+      oldValue = this.state.sessionLength;
     } else if (compName === "break") {
       valueToChange = this.state.breakLength;
+      oldValue = this.state.breakLength;
     } else {
       return;
     }
@@ -69,11 +72,24 @@ class App extends React.Component {
     }
 
     if (compName === "session") {
-      this.setState({ sessionLength: valueToChange }, () => {
-        console.log(this.state);
-      });
+      this.setState({ sessionLength: valueToChange });
+      if (
+        this.state.clockInterval === null &&
+        this.state.currentTimer === "Session" &&
+        this.state.minutesLeft === oldValue
+      ) {
+        this.setState({ minutesLeft: valueToChange });
+      }
     } else {
       this.setState({ breakLength: valueToChange });
+
+      if (
+        this.state.clockInterval === null &&
+        this.state.currentTimer === "Break" &&
+        this.state.minutesLeft === oldValue
+      ) {
+        this.setState({ minutesLeft: valueToChange });
+      }
     }
   };
 
@@ -82,6 +98,10 @@ class App extends React.Component {
     let secondsLeft = this.state.secondsLeft;
 
     if (secondsLeft === 0) {
+      if (minutesLeft === 0) {
+        this.changeTimer();
+        return;
+      }
       secondsLeft = 59;
       minutesLeft -= 1;
     } else {
@@ -89,16 +109,61 @@ class App extends React.Component {
     }
 
     this.setState({ minutesLeft: minutesLeft, secondsLeft: secondsLeft });
-  }
+  };
+
+  changeTimer = () => {
+    this.playBell();
+    this.pause();
+    let timer = this.state.currentTimer;
+    let minutesLeft = this.state.minutesLeft;
+
+    if (timer === "Session") {
+      timer = "Break";
+      minutesLeft = this.state.breakLength;
+    } else {
+      timer = "Session";
+      minutesLeft = this.state.sessionLength;
+    }
+    this.setState({ currentTimer: timer, minutesLeft: minutesLeft });
+    this.startStop();
+  };
+
+  playBell = () => {
+    this.audioBeep.play();
+  };
 
   startStop = () => {
     if (this.state.clockInterval === null) {
       const interval = setInterval(this.updateClock, 1000);
       this.setState({ clockInterval: interval });
     } else {
-      clearInterval(this.state.clockInterval);
-      this.setState({ clockInterval: null, });
+      this.pause();
     }
+  };
+
+  pause = () => {
+    if (this.state.clockInterval !== null) {
+      clearInterval(this.state.clockInterval);
+      this.setState({ clockInterval: null });
+    }
+  };
+
+  reset = () => {
+    if (this.state.clockInterval !== null) {
+      return;
+    }
+
+    let minutes = this.state.sessionLength;
+    let minutesLeft = this.state.minutesLeft;
+    let secondsLeft = this.state.secondsLeft;
+
+    if (this.state.currentTimer === "Break") {
+      minutes = this.state.breakLength;
+    }
+
+    minutesLeft = minutes;
+    secondsLeft = 0;
+    this.setState({ minutesLeft: minutesLeft, secondsLeft: secondsLeft });
   };
 
   render() {
@@ -119,13 +184,23 @@ class App extends React.Component {
             length={this.state.breakLength}
             clickFunc={this.changeControlValue}
           />
-          <Clock 
-            Columns="1/3" 
-            minutesLeft={this.state.minutesLeft} 
-            secondsLeft={this.state.secondsLeft} 
-            timer={this.state.currentTimer} 
+          <Clock
+            Columns="1/3"
+            minutesLeft={this.state.minutesLeft}
+            secondsLeft={this.state.secondsLeft}
+            timer={this.state.currentTimer}
             startStopFunc={this.startStop}
-            />
+            pauseFunc={this.pause}
+            resetFunc={this.reset}
+          />
+          <audio
+            id="beep"
+            preload="auto"
+            src={bell}
+            ref={audio => {
+              this.audioBeep = audio;
+            }}
+          />
         </AppContainer>
       </AppWrapper>
     );
