@@ -50,16 +50,20 @@ const Clock = ({
 
   return (
     <ClockDiv Columns={Columns}>
-      <div id="session_label">{timer}</div>
-      <ClockFace timer={timer}>{`${minutesLeft}:${seconds}`}</ClockFace>
+      <div id='timer-label'>{timer}</div>
+      <ClockFace
+        id='time-left'
+        timer={timer}>{`${minutesLeft
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`}</ClockFace>
       <ControlPanel>
         <Button onClick={pauseFunc}>
           <FontAwesomeIcon icon={faPause} />
         </Button>
-        <Button onClick={startStopFunc}>
+        <Button id='start_stop' onClick={startStopFunc}>
           <FontAwesomeIcon icon={faPlay} />
         </Button>
-        <Button onClick={resetFunc}>
+        <Button id='reset' onClick={resetFunc}>
           <FontAwesomeIcon icon={faSync} />
         </Button>
       </ControlPanel>

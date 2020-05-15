@@ -1,6 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
 import React from "react";
 import styled from "styled-components";
+import ReactFCCtest from "react-fcctest";
+
 import LengthControl from "./components/LengthControl";
 import GlobalStyle from "./Global";
 import Clock from "./components/Clock";
@@ -51,13 +53,21 @@ const Title = styled.h1`
   }
 `;
 
+const DEFAULTS = {
+  DEFAULT_BREAK_LENGTH: 5,
+  DEFAULT_SESSION_LENGTH: 25,
+  DEFAULT_MIN_LEFT: 25,
+  DEFAULT_SEC_LEFT: 0,
+  DEFAULT_TIMER: "Session"
+}
+
 class App extends React.Component {
   state = {
-    breakLength: 5,
-    sessionLength: 25,
-    minutesLeft: 25,
-    secondsLeft: 0,
-    currentTimer: "Session", //session or break
+    breakLength: DEFAULTS.DEFAULT_BREAK_LENGTH,
+    sessionLength: DEFAULTS.DEFAULT_SESSION_LENGTH,
+    minutesLeft: DEFAULTS.DEFAULT_MIN_LEFT,
+    secondsLeft: DEFAULTS.DEFAULT_SEC_LEFT,
+    currentTimer: DEFAULTS.DEFAULT_TIMER, //session or break
     clockInterval: null
   };
 
@@ -162,20 +172,21 @@ class App extends React.Component {
 
   reset = () => {
     if (this.state.clockInterval !== null) {
-      return;
+      clearInterval(this.state.clockInterval);
+      this.setState({ clockInterval: null });
     }
 
-    let minutes = this.state.sessionLength;
-    let minutesLeft = this.state.minutesLeft;
-    let secondsLeft = this.state.secondsLeft;
+    this.audioBeep.pause();
+    this.audioBeep.currentTime = 0;
 
-    if (this.state.currentTimer === "Break") {
-      minutes = this.state.breakLength;
-    }
-
-    minutesLeft = minutes;
-    secondsLeft = 0;
-    this.setState({ minutesLeft: minutesLeft, secondsLeft: secondsLeft });
+    this.setState({
+      breakLength: DEFAULTS.DEFAULT_BREAK_LENGTH,
+      sessionLength: DEFAULTS.DEFAULT_SESSION_LENGTH,
+      minutesLeft: DEFAULTS.DEFAULT_MIN_LEFT,
+      secondsLeft: DEFAULTS.DEFAULT_SEC_LEFT,
+      currentTimer: DEFAULTS.DEFAULT_TIMER, //session or break
+      clockInterval: null
+    });
   };
 
   render() {
@@ -183,21 +194,22 @@ class App extends React.Component {
       <AppWrapper>
         <GlobalStyle />
         <AppContainer>
+          <ReactFCCtest />
           <Title>React Pomodoro Clock</Title>
           <LengthControl
-            compName="session"
-            title="Session Time"
+            compName='session'
+            title='Session Time'
             length={this.state.sessionLength}
             clickFunc={this.changeControlValue}
           />
           <LengthControl
-            compName="break"
-            title="Break Time"
+            compName='break'
+            title='Break Time'
             length={this.state.breakLength}
             clickFunc={this.changeControlValue}
           />
           <Clock
-            Columns="1/3"
+            Columns='1/3'
             minutesLeft={this.state.minutesLeft}
             secondsLeft={this.state.secondsLeft}
             timer={this.state.currentTimer}
@@ -206,10 +218,10 @@ class App extends React.Component {
             resetFunc={this.reset}
           />
           <audio
-            id="beep"
-            preload="auto"
+            id='beep'
+            preload='auto'
             src={bell}
-            ref={audio => {
+            ref={(audio) => {
               this.audioBeep = audio;
             }}
           />
